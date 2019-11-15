@@ -26,7 +26,7 @@ spec:
       volumes:
         - name: flexvolume-mount
           hostPath:
-            path: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
+            path: /var/lib/kubelet/volume-plugins
         - name: etc
           hostPath:
             path: /etc/v3io/fuse
