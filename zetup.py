@@ -1,6 +1,7 @@
 # !! For Iguazio internal usage only !! #
 
 import os
+import uuid
 import simplejson
 import tempfile
 
@@ -198,7 +199,17 @@ def task_save_images(project, images, output_filepath=None):
                              output_filepath=output_filepath)
 
     project.logger.debug('Saving docker images', images=images)
-    yield ziggy.docker.save_images(project.ctx, images, output_filepath, compress=True)
+
+    registy_temp_name = 'registry_{}'.format(uuid.uuid4())
+    yield ziggy.shell.run(project.ctx, 'docker run --rm -d -p 5000:5000 -v {}:/var/lib/registry --name {} registry:2'.format(
+        os.path.abspath(output_filepath), registy_temp_name))
+
+    for image in images:
+        yield ziggy.shell.run(project.ctx, 'docker tag {0} localhost:5000/{0}'.format(image))
+        yield ziggy.shell.run(project.ctx, 'docker push localhost:5000/{}'.format(image))
+
+    yield ziggy.shell.run(project.ctx, 'docker stop {}'.format(registy_temp_name))
+
     project.logger.debug('Done saving docker images', output_filepath=output_filepath)
 
 
