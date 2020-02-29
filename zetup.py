@@ -211,7 +211,7 @@ def task_save_images(project, images, output_filepath=None):
 
         yield ziggy.shell.run(project.ctx, 'docker stop {}'.format(registy_temp_name))
     finally:
-        yield ziggy.shell.run(project.ctx, 'chown -R iguazio:iguazio {}'.format(os.path.abspath(output_filepath)))
+        yield ziggy.shell.run(project.ctx, 'sudo chown -R iguazio:iguazio {}'.format(os.path.abspath(output_filepath)))
 
     project.logger.debug('Done saving docker images', output_filepath=output_filepath)
 
