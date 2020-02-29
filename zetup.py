@@ -204,14 +204,11 @@ def task_save_images(project, images, output_filepath=None):
     yield ziggy.shell.run(project.ctx, 'docker run --rm -d -p 5000:5000 -v {}:/var/lib/registry --name {} registry:2'.format(
         os.path.abspath(output_filepath), registy_temp_name))
 
-    try:
-        for image in images:
-            yield ziggy.shell.run(project.ctx, 'docker tag {0} localhost:5000/{0}'.format(image))
-            yield ziggy.shell.run(project.ctx, 'docker push localhost:5000/{}'.format(image))
+    for image in images:
+        yield ziggy.shell.run(project.ctx, 'docker tag {0} localhost:5000/{0}'.format(image))
+        yield ziggy.shell.run(project.ctx, 'docker push localhost:5000/{}'.format(image))
 
-        yield ziggy.shell.run(project.ctx, 'docker stop {}'.format(registy_temp_name))
-    finally:
-        yield ziggy.shell.run(project.ctx, 'chown -R iguazio:iguazio {}'.format(os.path.abspath(output_filepath)))
+    yield ziggy.shell.run(project.ctx, 'docker stop {}'.format(registy_temp_name))
 
     project.logger.debug('Done saving docker images', output_filepath=output_filepath)
 
