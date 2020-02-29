@@ -201,7 +201,7 @@ def task_save_images(project, images, output_filepath=None):
     project.logger.debug('Saving docker images', images=images)
 
     registy_temp_name = 'registry_{}'.format(uuid.uuid4())
-    yield ziggy.shell.run(project.ctx, 'docker run --rm -d --user 1000 -p 5000:5000 -v {}:/var/lib/registry --name {} registry:2'.format(
+    yield ziggy.shell.run(project.ctx, 'docker run --rm -d -p 5000:5000 -v {}:/var/lib/registry --name {} registry:2'.format(
         os.path.abspath(output_filepath), registy_temp_name))
 
     for image in images:
