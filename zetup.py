@@ -178,7 +178,7 @@ def task_project_build(project, output_dir='flex_fuse_resources', tag='igz',
         {
             'name': 'save_images',
             'args': {
-                'output_filepath': os.path.join(save_images_dir, 'flex-fuse-docker-images'),
+                'output_filepath': save_images_dir,
                 'images': ['iguazio/flex-fuse:{}'.format(tag)],
             },
         },
@@ -194,7 +194,7 @@ def task_project_build(project, output_dir='flex_fuse_resources', tag='igz',
 @defer.inlineCallbacks
 def task_save_images(project, images, output_filepath=None):
     if not output_filepath:
-        output_filepath = tempfile.mktemp(suffix='.tar.gz', prefix='flex-fuse-docker-')
+        output_filepath = tempfile.mktemp(prefix='flex-fuse-docker-')
         project.logger.debug('no output filepath was given, using a temporary file',
                              output_filepath=output_filepath)
 
